@@ -1,0 +1,45 @@
+#!/usr/bin/with-contenv bash
+
+if [ "x$DB_ENV_DB_PASS" != "x"  ]; then
+  DB_PASS=$DB_ENV_DB_PASS
+fi
+if [ "x$DB_ENV_DB_USER" != "x"  ]; then
+  DB_USER=$DB_ENV_DB_USER
+fi
+if [ "x$DB_PORT_3306_TCP_ADDR" != "x"  ]; then
+  DB_HOST=$DB_PORT_3306_TCP_ADDR
+fi
+if [ "x$DB_PORT_3306_TCP_PORT" != "x"  ]; then
+  DB_PORT=$DB_PORT_3306_TCP_PORT
+fi
+
+export DB_PASS
+export DB_USER
+export DB_HOST
+export DB_PORT
+
+_file_marker=".mysql-configured"
+MYSQL=$(which mysql)
+
+initialize_zabbix_database() {
+  zabbix_mysql_v="/usr/share/zabbix/database/mysql"
+  $MYSQL -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -p"$DB_PASS" -e "CREATE DATABASE IF NOT EXISTS zabbix CHARACTER SET utf8;"
+  $MYSQL -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -D zabbix -p"$DB_PASS" < "${zabbix_mysql_v}/schema.sql"
+  $MYSQL -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -D zabbix -p"$DB_PASS" < "${zabbix_mysql_v}/images.sql"
+  $MYSQL -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -D zabbix -p"$DB_PASS" < "${zabbix_mysql_v}/data.sql"
+} &>/dev/null
+
+if [ ! -f "$_file_marker" ]; then
+  
+  while ! $MYSQL -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -p"$DB_PASS" -e "USE zabbix" >/dev/null 2>&1; do
+    sleep 1
+  done
+
+  initialize_zabbix_database
+  touch "$_file_marker"
+
+  sed -e "s/^\(DBHost=\).*/\1$DB_HOST/g" \
+      -e "s/^\(DBPort=\).*/\1$DB_PORT/g" \
+      -e "s/^\(DBUser=\).*/\1$DB_USER/g" \
+      -e "s/^\(DBPassword=\).*/\1$DB_PASS/g" -i /etc/zabbix/zabbix_server.conf
+fi

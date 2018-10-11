@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv bash
+
+/usr/sbin/zabbix_agentd -c /etc/zabbix/zabbix_agentd.conf

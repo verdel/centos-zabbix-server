@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv bash
+
+/usr/sbin/zabbix_server -c /etc/zabbix/zabbix_server.conf

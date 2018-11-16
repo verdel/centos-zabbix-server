@@ -1,3 +1,12 @@
 #!/usr/bin/with-contenv bash
 
-/usr/sbin/zabbix_server -c /etc/zabbix/zabbix_server.conf
+while [ ! -f /tmp/state/99-container-init ]
+do
+  sleep 1
+done
+
+### Start Zabbix
+echo ''
+echo '** [zabbix] Starting Zabbix Server'
+
+exec s6-setuidgid zabbix zabbix_server -f -c /etc/zabbix/zabbix_server.conf

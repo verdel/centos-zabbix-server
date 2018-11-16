@@ -1,3 +1,12 @@
 #!/usr/bin/with-contenv bash
 
-/usr/sbin/zabbix_agentd -c /etc/zabbix/zabbix_agentd.conf
+while [ ! -f /tmp/state/99-container-init ]
+do
+  sleep 1
+done
+
+### Start Zabbix
+echo ''
+echo '** [zabbix] Starting Zabbix Agent'
+
+exec s6-setuidgid zabbix zabbix_agentd -f -c /etc/zabbix/zabbix_agentd.conf >/dev/null 2>&1;

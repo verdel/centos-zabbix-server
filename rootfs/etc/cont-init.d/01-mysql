@@ -42,4 +42,6 @@ if [ ! -f "$_file_marker" ]; then
       -e "s/^\(DBPort=\).*/\1$DB_PORT/g" \
       -e "s/^\(DBUser=\).*/\1$DB_USER/g" \
       -e "s/^\(DBPassword=\).*/\1$DB_PASS/g" -i /etc/zabbix/zabbix_server.conf
+
+  sed -e "s/^\(Hostname=\).*/\1$ZABBIX_HOSTNAME/g" -i /etc/zabbix/zabbix_agentd.conf
 fi

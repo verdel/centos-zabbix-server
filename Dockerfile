@@ -7,7 +7,7 @@ ENV DB_USER zabbix
 ENV DB_PASS zabbix
 
 # Install zabbix
-RUN yum install -y https://repo.zabbix.com/zabbix/4.0/rhel/7/x86_64/zabbix-release-4.0-1.el7.noarch.rpm && \
+RUN yum install -y https://repo.zabbix.com/zabbix/4.2/rhel/7/x86_64/zabbix-release-4.2-1.el7.noarch.rpm && \
     yum install -y zabbix-server-mysql zabbix-agent mariadb && \
     pip install --upgrade setuptools && \
     pip install requests librouteros && \

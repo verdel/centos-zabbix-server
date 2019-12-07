@@ -1,5 +1,5 @@
 FROM verdel/centos-base:latest
-MAINTAINER Vadim Aleksandrov <valeksandrov@me.com>
+LABEL maintainer="Vadim Aleksandrov <valeksandrov@me.com>"
 
 ENV DB_HOST localhost
 ENV DB_PORT 3306

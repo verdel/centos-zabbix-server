@@ -23,6 +23,7 @@ COPY rootfs /
 
 RUN chmod 640 /etc/zabbix/zabbix_server.conf
 RUN chown root:zabbix /etc/zabbix/zabbix_server.conf
+RUN update-crypto-policies --set LEGACY
 
 # Export volumes directory
 VOLUME ["/etc/zabbix/alertscripts", "/etc/zabbix/externalscripts", "/etc/zabbix/tls"]
